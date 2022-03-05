@@ -4135,7 +4135,7 @@ int main(int argc, char **argv) {
 
     stop_timer
     double bw = (double) iter * 1000000. / (double) elapsed;
-    printf("bw %f/s elapsed %llus\n",bw,elapsed/1000000);
+    printf("bw %f/s elapsed %fs\n",bw,(double)elapsed/(double)1000000);
 
     //////////////// ends here ////////////////
 
