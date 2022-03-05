@@ -41,7 +41,23 @@
  *
  * There is no need for the caller to increment the refcount of 'value' as
  * the function takes care of it if needed. */
+
+#include <pthread.h>
+int count = 0;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
 void listTypePush(robj *subject, robj *value, int where) {
+
+    /**
+     * testing call chain here
+     */
+
+    pthread_mutex_lock(&lock);
+    printf("listTypePush called %d\n",count++);
+    pthread_mutex_unlock(&lock);
+
+
+
     if (subject->encoding == OBJ_ENCODING_QUICKLIST) {
         int pos = (where == LIST_HEAD) ? QUICKLIST_HEAD : QUICKLIST_TAIL;
         value = getDecodedObject(value);
