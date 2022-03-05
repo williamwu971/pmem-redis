@@ -49,12 +49,13 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 void listTypePush(robj *subject, robj *value, int where) {
 
     /**
+     * william
      * testing call chain here
      */
 
-    pthread_mutex_lock(&lock);
-    printf("listTypePush called %d\n",count++);
-    pthread_mutex_unlock(&lock);
+//    pthread_mutex_lock(&lock);
+//    printf("listTypePush called %d\n",count++);
+//    pthread_mutex_unlock(&lock);
 
 
 
@@ -248,6 +249,16 @@ void pushGenericCommand(client *c, int where) {
         return;
     }
 
+    /**
+     * william
+     * testing rapid calls here
+     */
+
+    pthread_mutex_lock(&lock);
+    printf("pushGenericCommand %d\n",c->argc);
+    pthread_mutex_unlock(&lock);
+
+
     for (j = 2; j < c->argc; j++) {
         if (!lobj) {
             lobj = createQuicklistObject();
@@ -408,7 +419,7 @@ void lsetCommand(client *c) {
         return;
 
     if (o->encoding == OBJ_ENCODING_QUICKLIST) {
-        quicklist *ql = o->ptr;  
+        quicklist *ql = o->ptr;
 #ifdef USE_NVM
         sds str = value->ptr;
         size_t len = sdslen(str);
@@ -712,7 +723,7 @@ void rpoplpushCommand(client *c) {
     robj *sobj, *value;
     if ((sobj = lookupKeyWriteOrReply(c,c->argv[1],shared.nullbulk)) == NULL ||
         checkType(c,sobj,OBJ_LIST)) return;
-    
+
     if (listTypeLength(sobj) == 0) {
         /* This may only happen after loading very old RDB files. Recent
          * versions of Redis delete keys of empty lists. */
