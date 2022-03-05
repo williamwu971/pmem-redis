@@ -255,7 +255,7 @@ void pushGenericCommand(client *c, int where) {
      */
 
     pthread_mutex_lock(&lock);
-    printf("pushGenericCommand %d %d\n",c->argc,count+=c->argc);
+    printf("pushGenericCommand %d %d\n",c->argc-2,count+=(c->argc-2));
     pthread_mutex_unlock(&lock);
 
 
