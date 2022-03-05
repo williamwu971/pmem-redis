@@ -2461,7 +2461,7 @@ int processCommand(client *c) {
      * testing command here
      */
 
-    printf("%s\n",c->argv[0]->ptr);
+//    printf("%s\n",c->argv[0]->ptr);
 
 
     if (!strcasecmp(c->argv[0]->ptr,"quit")) {

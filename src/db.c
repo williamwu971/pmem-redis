@@ -347,6 +347,14 @@ int selectDb(client *c, int id) {
     if (id < 0 || id >= server.dbnum)
         return C_ERR;
     c->db = &server.db[id];
+
+    /**
+     * william
+     * test db selection
+     */
+
+    printf("selectDb %d\n",id);
+
     return C_OK;
 }
 
