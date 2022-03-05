@@ -13,5 +13,5 @@ install:
 .PHONY: install
 
 push:
-	git commit -am "-AUTO- `date`" || true
-	git push https://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@github.com/williamwu971/pmem-redis.git || true
+	git commit -am "-AUTO- `date`"
+	git push https://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@github.com/williamwu971/pmem-redis.git
