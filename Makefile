@@ -14,4 +14,4 @@ install:
 
 push:
 	git commit -am "-AUTO- `date`"
-	git push https://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@github.com/williamwu971/pmem-redis.git
+	git push
