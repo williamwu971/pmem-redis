@@ -353,7 +353,7 @@ int selectDb(client *c, int id) {
      * test db selection
      */
 
-    printf("selectDb %d\n",id);
+//    printf("selectDb %d\n",id);
 
     return C_OK;
 }
