@@ -257,13 +257,13 @@ void pushGenericCommand(client *c, int where) {
 //    pthread_mutex_lock(&lock);
 //    printf("pushGenericCommand %d %d\n",c->argc-2,count+=(c->argc-2));
 //    pthread_mutex_unlock(&lock);
-    for (int idx=0;idx<c->argc;idx++){
-        printf("%d %d %d %d %d\n",
-               c->argv[idx]->encoding,c->argv[idx]->type,c->argv[idx]->type,c->argv[idx]->lru,c->argv[idx]->refcount);
+//    for (int idx=0;idx<c->argc;idx++){
+//        printf("%d %d %d %d %d\n",
+//               c->argv[idx]->encoding,c->argv[idx]->type,c->argv[idx]->lru,c->argv[idx]->refcount);
 //        printf("%s ",c->argv[idx]->ptr);
-    }
+//    }
 
-    printf("\n");
+//    printf("\n");
 
     for (j = 2; j < c->argc; j++) {
         if (!lobj) {

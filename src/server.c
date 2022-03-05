@@ -4077,29 +4077,47 @@ int main(int argc, char **argv) {
      */
 
     // init args
-//    client *c=malloc(sizeof (client));
-//    int pushed = 0;
-//    int where = LIST_HEAD;
-//    robj *lobj = lookupKeyWrite(c->db,c->argv[1]);
-//
-//    // copied function
-//    for (j = 2; j < c->argc; j++) {
-//        if (!lobj) {
-//            lobj = createQuicklistObject();
-//            quicklistSetOptions(lobj->ptr, server.list_max_ziplist_size,
-//                                server.list_compress_depth);
-//            dbAdd(c->db,c->argv[1],lobj);
-//        }
-//#ifdef SUPPORT_PBA
-//        server.pba.arg = c->argv[j];
-//#endif
-//        listTypePush(lobj,c->argv[j],where);
-//        pushed++;
-//    }
+    client *c=malloc(sizeof (client));
+    c->db=&server.db[0];
+
+
+    int pushed = 0;
+    int where = LIST_HEAD;
+
+    for (int num=0;num<100;num++){
+
+        c->argv=malloc(sizeof(struct redisObject)*3);
+        for (int tmp=0;tmp<3;tmp++){
+            c->argv[tmp]->ptr=malloc(256);
+            c->argv[tmp]->encoding=tmp==2?8:0;
+            c->argv[tmp]->type=0;
+            c->argv[tmp]->lru=2319499;
+            c->argv[tmp]->refcount=1;
+        }
+
+        robj *lobj = lookupKeyWrite(c->db,c->argv[1]);
+
+        // copied function
+        for (j = 2; j < c->argc; j++) {
+            if (!lobj) {
+                lobj = createQuicklistObject();
+                quicklistSetOptions(lobj->ptr, server.list_max_ziplist_size,
+                                    server.list_compress_depth);
+                dbAdd(c->db,c->argv[1],lobj);
+            }
+#ifdef SUPPORT_PBA
+            server.pba.arg = c->argv[j];
+#endif
+            listTypePush(lobj,c->argv[j],where);
+            pushed++;
+        }
+    }
+
+
 
     //////////////// ends here ////////////////
 
-    aeMain(server.el);
+//    aeMain(server.el);
     aeDeleteEventLoop(server.el);
     return 0;
 }
