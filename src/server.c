@@ -4070,6 +4070,7 @@ int main(int argc, char **argv) {
 
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);
+    aeMain(server.el);
 
     /**
      * william
@@ -4117,7 +4118,7 @@ int main(int argc, char **argv) {
 
     //////////////// ends here ////////////////
 
-//    aeMain(server.el);
+
     aeDeleteEventLoop(server.el);
     return 0;
 }
