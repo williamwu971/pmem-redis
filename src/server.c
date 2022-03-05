@@ -2176,7 +2176,7 @@ void redisOpArrayFree(redisOpArray *oa) {
 
 struct redisCommand *lookupCommand(sds name) {
 
-    printf("lookupCommand\n");
+//    printf("lookupCommand\n");
 
     return dictFetchValue(server.commands, name);
 }
@@ -2628,6 +2628,13 @@ int processCommand(client *c) {
         queueMultiCommand(c);
         addReply(c,shared.queued);
     } else {
+
+        /**
+         * William
+         */
+
+        printf("call\n");
+
         call(c,CMD_CALL_FULL);
         c->woff = server.master_repl_offset;
         if (listLength(server.ready_keys))
