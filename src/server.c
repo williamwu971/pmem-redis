@@ -3875,6 +3875,18 @@ int redisIsSupervised(int mode) {
     return 0;
 }
 
+#define declare_timer u_int64_t elapsed; \
+   struct timeval st, et;
+
+#define start_timer do { \
+    gettimeofday(&st,NULL); \
+} while(0);
+
+
+#define stop_timer do { \
+   gettimeofday(&et,NULL); \
+   elapsed = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec) + 1; \
+} while(0);
 
 int main(int argc, char **argv) {
     struct timeval tv;
@@ -4084,8 +4096,12 @@ int main(int argc, char **argv) {
 
     int pushed = 0;
     int where = LIST_HEAD;
+    int iter = 1000000;
 
-    for (int num=0;num<100;num++){
+    declare_timer
+    start_timer
+
+    for (int num=0;num<iter;num++){
 
         c->argv=malloc(sizeof(void*)*3);
         for (int tmp=0;tmp<3;tmp++){
@@ -4117,7 +4133,8 @@ int main(int argc, char **argv) {
         }
     }
 
-
+    stop_timer
+    double bw = (double) iter * 1000000. / (double) elapsed;
 
     //////////////// ends here ////////////////
 
