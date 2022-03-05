@@ -932,6 +932,12 @@ int serveClientBlockedOnList(client *receiver, robj *key, robj *dstkey, redisDb 
             argv[0] = shared.lpush;
             argv[1] = dstkey;
             argv[2] = value;
+
+            /**
+             * william test
+             */
+
+
             propagate(server.lpushCommand,
                 db->id,argv,3,
                 PROPAGATE_AOF|
@@ -1094,6 +1100,16 @@ void blockingPopGenericCommand(client *c, int where) {
 }
 
 void blpopCommand(client *c) {
+
+    /**
+     * william
+     * test call chain
+     */
+
+    pthread_mutex_lock(&lock);
+    printf("blpopCommand\n");
+    pthread_mutex_unlock(&lock);
+
     blockingPopGenericCommand(c,LIST_HEAD);
 }
 
