@@ -283,6 +283,16 @@ void pushGenericCommand(client *c, int where) {
 }
 
 void lpushCommand(client *c) {
+
+    /**
+ * william
+ * test call chain
+ */
+
+    pthread_mutex_lock(&lock);
+    printf("blpopCommand\n");
+    pthread_mutex_unlock(&lock);
+
     pushGenericCommand(c,LIST_HEAD);
 }
 
@@ -1100,15 +1110,6 @@ void blockingPopGenericCommand(client *c, int where) {
 }
 
 void blpopCommand(client *c) {
-
-    /**
-     * william
-     * test call chain
-     */
-
-    pthread_mutex_lock(&lock);
-    printf("blpopCommand\n");
-    pthread_mutex_unlock(&lock);
 
     blockingPopGenericCommand(c,LIST_HEAD);
 }
