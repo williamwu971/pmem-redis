@@ -2440,6 +2440,15 @@ int processCommand(client *c) {
      * go through checking for replication and QUIT will cause trouble
      * when FORCE_REPLICATION is enabled and would be implemented in
      * a regular command proc. */
+
+    /**
+     * william
+     * testing command here
+     */
+
+    printf("%s\n",c->argv[0]->ptr);
+
+
     if (!strcasecmp(c->argv[0]->ptr,"quit")) {
         addReply(c,shared.ok);
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;

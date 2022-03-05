@@ -254,9 +254,9 @@ void pushGenericCommand(client *c, int where) {
      * testing rapid calls here
      */
 
-    pthread_mutex_lock(&lock);
-    printf("pushGenericCommand %d %d\n",c->argc-2,count+=(c->argc-2));
-    pthread_mutex_unlock(&lock);
+//    pthread_mutex_lock(&lock);
+//    printf("pushGenericCommand %d %d\n",c->argc-2,count+=(c->argc-2));
+//    pthread_mutex_unlock(&lock);
 
 
     for (j = 2; j < c->argc; j++) {
