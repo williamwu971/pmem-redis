@@ -2337,10 +2337,23 @@ void call(client *c, int flags) {
     redisOpArrayInit(&server.also_propagate);
 
     /* Call the command. */
+
+
+
+
+
     dirty = server.dirty;
     start = ustime();
     c->cmd->proc(c);
     duration = ustime()-start;
+
+    /**
+     * William
+     * test
+     */
+
+    printf("call inside with %lld\n",duration);
+
     dirty = server.dirty-dirty;
     if (dirty < 0) dirty = 0;
 
@@ -2633,7 +2646,7 @@ int processCommand(client *c) {
          * William
          */
 
-        printf("call\n");
+//        printf("call\n");
 
         call(c,CMD_CALL_FULL);
         c->woff = server.master_repl_offset;
