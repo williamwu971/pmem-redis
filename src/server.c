@@ -4088,13 +4088,13 @@ int main(int argc, char **argv) {
     for (int num=0;num<100;num++){
 
         c->argv=malloc(sizeof(struct redisObject)*3);
-        for (int tmp=0;tmp<3;tmp++){
-            c->argv[tmp]->ptr=malloc(256);
-            c->argv[tmp]->encoding=tmp==2?8:0;
-            c->argv[tmp]->type=0;
-            c->argv[tmp]->lru=2319499;
-            c->argv[tmp]->refcount=1;
-        }
+//        for (int tmp=0;tmp<3;tmp++){
+//            c->argv[tmp]->ptr=malloc(256);
+//            c->argv[tmp]->encoding=tmp==2?8:0;
+//            c->argv[tmp]->type=0;
+//            c->argv[tmp]->lru=2319499;
+//            c->argv[tmp]->refcount=1;
+//        }
 
 //        robj *lobj = lookupKeyWrite(c->db,c->argv[1]);
 //
