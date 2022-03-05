@@ -22,3 +22,6 @@ cp:
 mount:
 	mkfs.ext4 /dev/pmem0
 	mount -o dax /dev/pmem0 /pmem0
+
+run:
+	src/redis-server --nvm-maxcapacity 50 --nvm-dir /pmem0 --nvm-threshold 64
