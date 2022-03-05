@@ -290,7 +290,7 @@ void lpushCommand(client *c) {
  */
 
     pthread_mutex_lock(&lock);
-    printf("blpopCommand\n");
+    printf("lpushCommand\n");
     pthread_mutex_unlock(&lock);
 
     pushGenericCommand(c,LIST_HEAD);
