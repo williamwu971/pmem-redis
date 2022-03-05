@@ -2175,12 +2175,15 @@ void redisOpArrayFree(redisOpArray *oa) {
 /* ====================== Commands lookup and execution ===================== */
 
 struct redisCommand *lookupCommand(sds name) {
+
+    printf("lookupCommand\n");
+
     return dictFetchValue(server.commands, name);
 }
 
 struct redisCommand *lookupCommandByCString(char *s) {
 
-    printf("lookupCommandByCString\n");
+//    printf("lookupCommandByCString\n");
 
     struct redisCommand *cmd;
     sds name = sdsnew(s);
