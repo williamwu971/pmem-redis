@@ -2348,7 +2348,7 @@ void call(client *c, int flags) {
      * test
      */
 
-    printf("call inside with %lld\n",duration);
+//    printf("call inside with %lld\n",duration);
 
     dirty = server.dirty-dirty;
     if (dirty < 0) dirty = 0;
@@ -2461,7 +2461,7 @@ int processCommand(client *c) {
      * testing command here
      */
 
-//    printf("%s\n",c->argv[0]->ptr);
+    printf("%s\n",c->argv[0]->ptr);
 
 
     if (!strcasecmp(c->argv[0]->ptr,"quit")) {
