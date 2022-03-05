@@ -289,9 +289,9 @@ void lpushCommand(client *c) {
  * test call chain
  */
 
-    pthread_mutex_lock(&lock);
-    printf("lpushCommand\n");
-    pthread_mutex_unlock(&lock);
+//    pthread_mutex_lock(&lock);
+//    printf("lpushCommand\n");
+//    pthread_mutex_unlock(&lock);
 
     pushGenericCommand(c,LIST_HEAD);
 }
@@ -947,6 +947,9 @@ int serveClientBlockedOnList(client *receiver, robj *key, robj *dstkey, redisDb 
              * william test
              */
 
+            pthread_mutex_lock(&lock);
+            printf("serveClientBlockedOnList\n");
+            pthread_mutex_unlock(&lock);
 
             propagate(server.lpushCommand,
                 db->id,argv,3,
