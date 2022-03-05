@@ -2179,6 +2179,9 @@ struct redisCommand *lookupCommand(sds name) {
 }
 
 struct redisCommand *lookupCommandByCString(char *s) {
+
+    printf("lookupCommandByCString\n");
+
     struct redisCommand *cmd;
     sds name = sdsnew(s);
 

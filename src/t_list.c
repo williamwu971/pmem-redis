@@ -947,9 +947,9 @@ int serveClientBlockedOnList(client *receiver, robj *key, robj *dstkey, redisDb 
              * william test
              */
 
-            pthread_mutex_lock(&lock);
-            printf("serveClientBlockedOnList\n");
-            pthread_mutex_unlock(&lock);
+//            pthread_mutex_lock(&lock);
+//            printf("serveClientBlockedOnList\n");
+//            pthread_mutex_unlock(&lock);
 
             propagate(server.lpushCommand,
                 db->id,argv,3,
