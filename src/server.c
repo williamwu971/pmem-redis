@@ -4087,8 +4087,9 @@ int main(int argc, char **argv) {
 
     for (int num=0;num<100;num++){
 
-
+        c->argv=malloc(sizeof(void*)*3);
         for (int tmp=0;tmp<3;tmp++){
+
 
             c->argv[tmp]=malloc(sizeof(struct redisObject));
             c->argv[tmp]->ptr=malloc(256);
