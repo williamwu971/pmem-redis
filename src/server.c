@@ -2338,10 +2338,6 @@ void call(client *c, int flags) {
 
     /* Call the command. */
 
-
-
-
-
     dirty = server.dirty;
     start = ustime();
     c->cmd->proc(c);
