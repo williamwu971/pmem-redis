@@ -4098,6 +4098,10 @@ int main(int argc, char **argv) {
     int where = LIST_HEAD;
     int iter = 1000000;
 
+    while (server.loading){
+        sleep(1);
+    }
+
     declare_timer
     start_timer
 
