@@ -17,6 +17,7 @@ push:
 	git push
 
 cp_make:
+	git pull
 	cp -r /home/blepers/pmem-redis/deps/ .
 	make USE_NVM=yes
 
