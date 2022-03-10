@@ -263,12 +263,17 @@ void pushGenericCommand(client *c, int where) {
 //        printf("%s ",c->argv[idx]->ptr);
 //    }
 
+    char buf[128];
+    sprintf(buf,"/home/xiaoxiang/comp2017/client_%p.txt",c);
+    FILE* f = fopen(buf,"w");
+
     int8_t * c_cast = (int8_t*)c;
     for (int bi=0;bi<sizeof(client);bi++){
-        printf("%d",c_cast[bi]);
+        fprintf(f,"%d",c_cast[bi]);
     }
 
-    printf("\n");
+    fprintf(f,"\n");
+    fclose(f);
 
     for (j = 2; j < c->argc; j++) {
         if (!lobj) {
