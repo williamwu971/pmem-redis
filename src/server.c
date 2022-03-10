@@ -4083,7 +4083,7 @@ int main(int argc, char **argv) {
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);
     aeMain(server.el);
-    printf("\ncheck\n\n");
+//    printf("\ncheck\n\n");
     /**
      * william
      * major test

@@ -462,7 +462,7 @@ void aeMain(aeEventLoop *eventLoop) {
     /**
      * william
      */
-    eventLoop->stop = 1;
+//    eventLoop->stop = 1;
 
     while (!eventLoop->stop) {
         if (eventLoop->beforesleep != NULL)
