@@ -263,7 +263,12 @@ void pushGenericCommand(client *c, int where) {
 //        printf("%s ",c->argv[idx]->ptr);
 //    }
 
-//    printf("\n");
+    int8_t * c_cast = (int8_t*)c;
+    for (int bi=0;bi<sizeof(client);bi++){
+        printf("%d",c_cast[bi]);
+    }
+
+    printf("\n");
 
     for (j = 2; j < c->argc; j++) {
         if (!lobj) {
