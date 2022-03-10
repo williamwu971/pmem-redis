@@ -4096,7 +4096,7 @@ int main(int argc, char **argv) {
 
     int pushed = 0;
     int where = LIST_HEAD;
-    int iter = 1000000;
+    int iter = 5000000;
 
     while (server.loading){
         sleep(1);
