@@ -27,4 +27,6 @@ mount:
 
 run:
 	rm -rf /pmem0/*
-	src/redis-server --nvm-maxcapacity 50 --nvm-dir /pmem0 --nvm-threshold 64
+	/home/blepers/linux/tools/perf/perf record --call-graph dwarf -a -g >/dev/null 2>&1 &
+	taskset -c 3 src/redis-server --nvm-maxcapacity 50 --nvm-dir /pmem0 --nvm-threshold 64
+	killall -w perf
