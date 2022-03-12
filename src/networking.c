@@ -893,6 +893,7 @@ void freeClientsInAsyncFreeQueue(void) {
 ssize_t async_write(int fd, const void *buf, size_t count){
 
     struct aiocb * a = sds_malloc(sizeof(struct aiocb));
+    serverAssert(a!=NULL);
     a->aio_fildes=fd;
     a->aio_buf=buf;
     a->aio_nbytes=count;
