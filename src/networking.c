@@ -890,7 +890,17 @@ void freeClientsInAsyncFreeQueue(void) {
 
 //int write_times=0; // william
 #include <aio.h>
+ssize_t async_write(int fd, const void *buf, size_t count){
 
+    struct aiocb * a = sds_malloc(sizeof(struct aiocb));
+    a->aio_fildes=fd;
+    a->aio_buf=buf;
+    a->aio_nbytes=count;
+    int re = aio_write(a);
+
+    if (!re) return count;
+    return 0;
+}
 
 /* Write data in output buffers to client. Return C_OK if the client
  * is still valid after the call, C_ERR if it was freed. */
@@ -901,8 +911,9 @@ int writeToClient(int fd, client *c, int handler_installed) {
 
     while(clientHasPendingReplies(c)) {
         if (c->bufpos > 0) {
-            nwritten = write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
+//            nwritten = write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
 
+            nwritten = async_write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
             /**
              * william
              */
@@ -928,8 +939,9 @@ int writeToClient(int fd, client *c, int handler_installed) {
                 continue;
             }
 
-            nwritten = write(fd, o + c->sentlen, objlen - c->sentlen);
+//            nwritten = write(fd, o + c->sentlen, objlen - c->sentlen);
 
+            nwritten = async_write(fd, o + c->sentlen, objlen - c->sentlen);
             /**
              * william
              */
