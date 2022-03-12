@@ -899,8 +899,13 @@ ssize_t async_write(int fd, const void *buf, size_t count){
     a->aio_nbytes=count;
     int re = aio_write(a);
 
-    if (!re) return count;
-    return 0;
+    if (!re) {
+        return count;
+    }else{
+        printf("queue error!\n");
+        return 0;
+    }
+
 }
 
 /* Write data in output buffers to client. Return C_OK if the client
