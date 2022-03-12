@@ -896,6 +896,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //    return write(fd,buf,count);
 
     struct aiocb * a = sds_malloc(sizeof(struct aiocb));
+    memset(a,0,sizeof(struct aiocb));
     serverAssert(a!=NULL);
     a->aio_fildes=fd;
 
