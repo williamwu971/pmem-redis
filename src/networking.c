@@ -897,10 +897,10 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     a->aio_fildes=fd;
 
     a->aio_buf=((int8_t *)a)+sizeof(struct aiocb);
-    memcpy(a->aio_buf,buf,count);
+    memcpy(a->aio_buf,buf,count); // possibly costly
 
     a->aio_nbytes=count;
-    a->aio_offset= 0;
+    a->aio_offset= 0; // potential bug
     int re = aio_write(a);
 
     if (!re) {
