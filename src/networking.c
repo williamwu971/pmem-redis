@@ -892,14 +892,14 @@ void freeClientsInAsyncFreeQueue(void) {
 #include <aio.h>
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
-    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
-    return write(fd,buf,count);
+//    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
+//    return write(fd,buf,count);
 
-    struct aiocb * a = sds_malloc(sizeof(struct aiocb)+count);
+    struct aiocb * a = sds_malloc(sizeof(struct aiocb));
     serverAssert(a!=NULL);
     a->aio_fildes=fd;
 
-    a->aio_buf=((int8_t *)a)+sizeof(struct aiocb);
+    a->aio_buf= sds_malloc(count);
     memcpy(a->aio_buf,buf,count); // possibly costly
 
     a->aio_nbytes=count;
@@ -909,7 +909,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     if (!re) {
         return count;
     }else{
-        printf("queue error! errno:%d\n",errno);
+        printf("queue error! errno:%s\n", strerror(errno));
         fflush(stdout);
         return 0;
     }
