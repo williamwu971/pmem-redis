@@ -888,6 +888,8 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
+int write_times=0; // william
+
 /* Write data in output buffers to client. Return C_OK if the client
  * is still valid after the call, C_ERR if it was freed. */
 int writeToClient(int fd, client *c, int handler_installed) {
@@ -898,6 +900,13 @@ int writeToClient(int fd, client *c, int handler_installed) {
     while(clientHasPendingReplies(c)) {
         if (c->bufpos > 0) {
             nwritten = write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
+
+            /**
+             * william
+             */
+            printf("write called %d\n",++write_times);
+
+
             if (nwritten <= 0) break;
             c->sentlen += nwritten;
             totwritten += nwritten;
@@ -918,6 +927,13 @@ int writeToClient(int fd, client *c, int handler_installed) {
             }
 
             nwritten = write(fd, o + c->sentlen, objlen - c->sentlen);
+
+            /**
+             * william
+             */
+            printf("write called %d\n",++write_times);
+
+
             if (nwritten <= 0) break;
             c->sentlen += nwritten;
             totwritten += nwritten;
