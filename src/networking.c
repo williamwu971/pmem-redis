@@ -892,7 +892,7 @@ void freeClientsInAsyncFreeQueue(void) {
 #include <aio.h>
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
-    printf("write at loc:%lld\n", lseek(fd,0,SEEK_CUR));
+    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
     return write(fd,buf,count);
 
     struct aiocb * a = sds_malloc(sizeof(struct aiocb)+count);
