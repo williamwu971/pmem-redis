@@ -892,12 +892,15 @@ void freeClientsInAsyncFreeQueue(void) {
 #include <aio.h>
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
-    struct aiocb * a = sds_malloc(sizeof(struct aiocb));
+    struct aiocb * a = sds_malloc(sizeof(struct aiocb)+count);
     serverAssert(a!=NULL);
     a->aio_fildes=fd;
-    a->aio_buf=buf;
+
+    a->aio_buf=((int8_t *)a)+sizeof(struct aiocb);
+    memcpy(a->aio_buf,buf,count);
+
     a->aio_nbytes=count;
-    a->aio_offset= offset;
+    a->aio_offset= 0;
     int re = aio_write(a);
 
     if (!re) {
