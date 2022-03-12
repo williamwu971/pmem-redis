@@ -888,7 +888,9 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
-int write_times=0; // william
+//int write_times=0; // william
+#include <aio.h>
+
 
 /* Write data in output buffers to client. Return C_OK if the client
  * is still valid after the call, C_ERR if it was freed. */
@@ -904,7 +906,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
             /**
              * william
              */
-            printf("write called %d\n",++write_times);
+//            printf("write called %d\n",++write_times);
 
 
             if (nwritten <= 0) break;
@@ -931,7 +933,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
             /**
              * william
              */
-            printf("write called %d\n",++write_times);
+//            printf("write called %d\n",++write_times);
 
 
             if (nwritten <= 0) break;
@@ -996,6 +998,9 @@ int writeToClient(int fd, client *c, int handler_installed) {
 void sendReplyToClient(aeEventLoop *el, int fd, void *privdata, int mask) {
     UNUSED(el);
     UNUSED(mask);
+
+    printf("sendReplyToClient\n"); //william
+
     writeToClient(fd,privdata,1);
 }
 
