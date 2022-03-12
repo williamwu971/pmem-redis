@@ -895,12 +895,12 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
 //    return write(fd,buf,count);
 
-    struct aiocb * a = sds_malloc(sizeof(struct aiocb));
+    struct aiocb * a = malloc(sizeof(struct aiocb));
     memset(a,0,sizeof(struct aiocb));
     serverAssert(a!=NULL);
     a->aio_fildes=fd;
 
-    a->aio_buf= sds_malloc(count);
+    a->aio_buf= malloc(count);
     memcpy(a->aio_buf,buf,count); // possibly costly
 
     a->aio_nbytes=count;
