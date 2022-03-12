@@ -897,6 +897,7 @@ ssize_t async_write(int fd, const void *buf, size_t count){
     a->aio_fildes=fd;
     a->aio_buf=buf;
     a->aio_nbytes=count;
+    a->aio_offset= lseek(fd,0,SEEK_CUR);
     int re = aio_write(a);
 
     if (!re) {
