@@ -890,14 +890,14 @@ void freeClientsInAsyncFreeQueue(void) {
 
 //int write_times=0; // william
 #include <aio.h>
-ssize_t async_write(int fd, const void *buf, size_t count){
+ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
     struct aiocb * a = sds_malloc(sizeof(struct aiocb));
     serverAssert(a!=NULL);
     a->aio_fildes=fd;
     a->aio_buf=buf;
     a->aio_nbytes=count;
-    a->aio_offset= lseek(fd,0,SEEK_CUR);
+    a->aio_offset= offset;
     int re = aio_write(a);
 
     if (!re) {
@@ -921,7 +921,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
         if (c->bufpos > 0) {
 //            nwritten = write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
 
-            nwritten = async_write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
+            nwritten = async_write(fd,c->sentlen,c->buf+c->sentlen,c->bufpos-c->sentlen);
             /**
              * william
              */
@@ -949,7 +949,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
 
 //            nwritten = write(fd, o + c->sentlen, objlen - c->sentlen);
 
-            nwritten = async_write(fd, o + c->sentlen, objlen - c->sentlen);
+            nwritten = async_write(fd, c->sentlen,o + c->sentlen, objlen - c->sentlen);
             /**
              * william
              */
