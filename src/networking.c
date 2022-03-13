@@ -905,11 +905,11 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     ap->task.aio_offset= 0; // potential bug
     int re = aio_write(&(ap->task));
 
-    if (async_queue==NULL){
-        async_queue=ap;
+    if (async_io_queue == NULL){
+        async_io_queue=ap;
     }else{
-        ap->next=async_queue;
-        async_queue=ap;
+        ap->next=async_io_queue;
+        async_io_queue=ap;
     }
 
     if (!re) {

@@ -2141,6 +2141,6 @@ struct async_pack{
     struct async_pack* next;
 };
 
-struct async_pack* async_queue=NULL;
+struct async_pack* async_io_queue=NULL;
 
 #endif

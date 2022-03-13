@@ -4154,9 +4154,9 @@ int main(int argc, char **argv) {
      * william: wait for async IO to complete
      */
 
-    while (async_queue!=NULL){
+    while (async_io_queue != NULL){
 
-        int res = aio_error(&(async_queue->task));
+        int res = aio_error(&(async_io_queue->task));
         struct async_pack* tmp;
 
         switch (res) {
@@ -4166,9 +4166,9 @@ int main(int argc, char **argv) {
             case ECANCELED:
                 printf("\nECANCELED detected!\n");
             case 0:
-                tmp=async_queue->next;
-                free(async_queue);
-                async_queue=tmp;
+                tmp=async_io_queue->next;
+                free(async_io_queue);
+                async_io_queue=tmp;
                 break;
             default:
                 printf("\nERROR waiting\n");
@@ -4176,7 +4176,7 @@ int main(int argc, char **argv) {
 
         }
     }
-    printf("async_queue complete!\n");
+    printf("async_io_queue complete!\n");
 
     aeDeleteEventLoop(server.el);
 
