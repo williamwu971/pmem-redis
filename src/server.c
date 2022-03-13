@@ -4176,7 +4176,7 @@ int main(int argc, char **argv) {
 
         }
     }
-
+    printf("async_queue complete!\n");
 
     aeDeleteEventLoop(server.el);
 
