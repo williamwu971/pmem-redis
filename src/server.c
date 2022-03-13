@@ -315,6 +315,8 @@ struct redisCommand redisCommandTable[] = {
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0}
 };
 
+struct async_pack* async_io_queue=NULL;//william
+
 /*============================ Utility functions ============================ */
 
 /* Low level logging. To use only for very big messages, otherwise
@@ -3690,6 +3692,38 @@ static void sigShutdownHandler(int sig) {
         exit(0);
     }
 
+    /**
+ * william: wait for async IO to complete
+ */
+
+    int async_io_queue_len=0;
+
+    while (async_io_queue != NULL){
+
+        int res = aio_error(&(async_io_queue->task));
+        struct async_pack* tmp;
+
+        switch (res) {
+            case EINPROGRESS:
+                sleep(1);
+                break;
+            case ECANCELED:
+                printf("\nECANCELED detected!\n");
+            case 0:
+                tmp=async_io_queue->next;
+                free(async_io_queue);
+                async_io_queue=tmp;
+                async_io_queue_len++;
+                break;
+            default:
+                printf("\nERROR waiting\n");
+                break;
+
+        }
+    }
+    printf("async_io_queue:%d complete!\n",async_io_queue_len);
+    fflush(stdout);
+
     serverLogFromHandler(LL_WARNING, msg);
     server.shutdown_asap = 1;
 }
@@ -3888,7 +3922,7 @@ int redisIsSupervised(int mode) {
    elapsed = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec) + 1; \
 } while(0);
 
-struct async_pack* async_io_queue=NULL;
+
 
 int main(int argc, char **argv) {
     struct timeval tv;
@@ -4152,37 +4186,7 @@ int main(int argc, char **argv) {
 
     //////////////// ends here ////////////////
 
-    /**
-     * william: wait for async IO to complete
-     */
 
-    int async_io_queue_len=0;
-
-    while (async_io_queue != NULL){
-
-        int res = aio_error(&(async_io_queue->task));
-        struct async_pack* tmp;
-
-        switch (res) {
-            case EINPROGRESS:
-                sleep(1);
-                break;
-            case ECANCELED:
-                printf("\nECANCELED detected!\n");
-            case 0:
-                tmp=async_io_queue->next;
-                free(async_io_queue);
-                async_io_queue=tmp;
-                async_io_queue_len++;
-                break;
-            default:
-                printf("\nERROR waiting\n");
-                break;
-
-        }
-    }
-    printf("async_io_queue:%d complete!\n",async_io_queue_len);
-    fflush(stdout);
 
     aeDeleteEventLoop(server.el);
     return 0;
