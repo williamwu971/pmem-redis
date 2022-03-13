@@ -50,6 +50,7 @@
 #include <lua.h>
 #include <signal.h>
 #include <stdarg.h>
+#include <aio.h>
 
 typedef long long mstime_t; /* millisecond time type. */
 
@@ -2133,5 +2134,13 @@ void xorDigest(unsigned char *digest, void *ptr, size_t len);
     printf("DEBUG %s:%d > " fmt "\n", __FILE__, __LINE__, __VA_ARGS__)
 #define redisDebugMark() \
     printf("-- MARK %s:%d --\n", __FILE__, __LINE__)
+
+
+struct async_pack{
+    struct aiocb task;
+    struct async_pack* next;
+};
+
+struct async_pack* async_queue=NULL;
 
 #endif

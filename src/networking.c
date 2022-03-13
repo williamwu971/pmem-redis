@@ -889,28 +889,34 @@ void freeClientsInAsyncFreeQueue(void) {
 }
 
 //int write_times=0; // william
-#include <aio.h>
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
 //    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
 //    return write(fd,buf,count);
 
-    struct aiocb * a = malloc(sizeof(struct aiocb));
-    memset(a,0,sizeof(struct aiocb));
-    serverAssert(a!=NULL);
-    a->aio_fildes=fd;
+    struct async_pack* ap = malloc(sizeof(struct async_pack));
+    memset(ap,0,sizeof(struct async_pack));
+    serverAssert(ap!=NULL);
 
-    a->aio_buf= malloc(count);
-    memcpy(a->aio_buf,buf,count); // possibly costly
+    ap->task.aio_fildes=fd;
+    ap->task.aio_buf= malloc(count);
+    memcpy(ap->task.aio_buf,buf,count); // possibly costly
+    ap->task.aio_nbytes=count;
+    ap->task.aio_offset= 0; // potential bug
+    int re = aio_write(&(ap->task));
 
-    a->aio_nbytes=count;
-    a->aio_offset= 0; // potential bug
-    int re = aio_write(a);
+    if (async_queue==NULL){
+        async_queue=ap;
+    }else{
+        ap->next=async_queue;
+        async_queue=ap;
+    }
 
     if (!re) {
         return count;
     }else{
-        printf("queue error! %lld %d %zu errno:%s\n",a->aio_offset,a->aio_reqprio,a->aio_nbytes, strerror(errno));
+        printf("queue error! %lld %d %zu errno:%s\n",
+               ap->task.aio_offset,ap->task.aio_reqprio,ap->task.aio_nbytes, strerror(errno));
         fflush(stdout);
         return 0;
     }

@@ -4150,8 +4150,38 @@ int main(int argc, char **argv) {
 
     //////////////// ends here ////////////////
 
+    /**
+     * william: wait for async IO to complete
+     */
+
+    while (async_queue!=NULL){
+
+        int res = aio_error(&(async_queue->task));
+        struct async_pack* tmp;
+
+        switch (res) {
+            case EINPROGRESS:
+                sleep(1);
+                break;
+            case ECANCELED:
+                printf("\nECANCELED detected!\n");
+            case 0:
+                tmp=async_queue->next;
+                free(async_queue);
+                async_queue=tmp;
+                break;
+            default:
+                printf("\nERROR waiting\n");
+                break;
+
+        }
+    }
+
 
     aeDeleteEventLoop(server.el);
+
+
+
     return 0;
 }
 
