@@ -896,7 +896,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
     void* map = mmap(NULL,count,PROT_READ|PROT_WRITE,MAP_SHARED,fd,offset);
     if (map==MAP_FAILED){
-        printf("MAP_FAILED\n");
+        printf("MAP_FAILED fd:%d %s\n", fd,strerror(errno));
         return 0;
     }
     memcpy(map,buf,count);
