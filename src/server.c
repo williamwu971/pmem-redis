@@ -3721,7 +3721,7 @@ static void sigShutdownHandler(int sig) {
 
         }
     }
-    printf("async_io_queue:%d complete!\n",async_io_queue_len);
+    printf("\nasync_io_queue:%d complete!\n",async_io_queue_len);
     fflush(stdout);
 
     serverLogFromHandler(LL_WARNING, msg);
