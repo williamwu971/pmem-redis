@@ -50,7 +50,12 @@
 #include <lua.h>
 #include <signal.h>
 #include <stdarg.h>
+
+/**
+ * william
+ */
 #include <aio.h>
+#include <sys/mman.h>
 
 typedef long long mstime_t; /* millisecond time type. */
 
