@@ -4182,11 +4182,9 @@ int main(int argc, char **argv) {
         }
     }
     printf("async_io_queue:%d complete!\n",async_io_queue_len);
+    fflush(stdout);
 
     aeDeleteEventLoop(server.el);
-
-
-
     return 0;
 }
 
