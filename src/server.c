@@ -3888,6 +3888,8 @@ int redisIsSupervised(int mode) {
    elapsed = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec) + 1; \
 } while(0);
 
+struct async_pack* async_io_queue=NULL;
+
 int main(int argc, char **argv) {
     struct timeval tv;
     int j;
@@ -4154,6 +4156,8 @@ int main(int argc, char **argv) {
      * william: wait for async IO to complete
      */
 
+    int async_io_queue_len=0;
+
     while (async_io_queue != NULL){
 
         int res = aio_error(&(async_io_queue->task));
@@ -4169,6 +4173,7 @@ int main(int argc, char **argv) {
                 tmp=async_io_queue->next;
                 free(async_io_queue);
                 async_io_queue=tmp;
+                async_io_queue_len++;
                 break;
             default:
                 printf("\nERROR waiting\n");
@@ -4176,7 +4181,7 @@ int main(int argc, char **argv) {
 
         }
     }
-    printf("async_io_queue complete!\n");
+    printf("async_io_queue:%d complete!\n",async_io_queue_len);
 
     aeDeleteEventLoop(server.el);
 

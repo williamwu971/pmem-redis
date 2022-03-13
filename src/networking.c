@@ -905,6 +905,8 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     ap->task.aio_offset= 0; // potential bug
     int re = aio_write(&(ap->task));
 
+    extern struct async_pack* async_io_queue;
+
     if (async_io_queue == NULL){
         async_io_queue=ap;
     }else{
