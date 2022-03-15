@@ -903,7 +903,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     }
 
 //    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
-    return write(fd,buf,count);
+//    return write(fd,buf,count);
 
 //    void* map = mmap(NULL,count,PROT_READ|PROT_WRITE,MAP_SHARED,fd,offset);
 //    if (map==MAP_FAILED){
