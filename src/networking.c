@@ -931,17 +931,20 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     memset(ap,0,sizeof(struct async_pack));
     serverAssert(ap!=NULL);
 
-    extern aio_context_t ctx;
+    extern io_context_t ctx;
+    struct iocb ii;
 
     if (unlikely(!ctx_inited)){
         io_setup(128, &ctx);
     }
     ap->cb=malloc(sizeof(struct iocb*));
     ap->cb[0]=malloc(sizeof(struct iocb));
-    ap->cb[0][0] = (struct iocb){.aio_fildes = fd,
-            .aio_lio_opcode = IOCB_CMD_PWRITE,
-            .aio_buf = (uint64_t)buf,
-            .aio_nbytes = count};
+    io_prep_pwrite(ap->cb[0],fd,buf,count,offset);
+//    ap->cb[0][0] = (struct iocb){.aio_fildes = fd,
+//            .aio_lio_opcode = IO_CMD_PWRITE,
+//
+//            .aio_buf = (uint64_t)buf,
+//            .aio_nbytes = count};
 //    struct iocb *list_of_iocb[1] = {&cb};
 
     int re = io_submit(ctx, 1, ap->cb);

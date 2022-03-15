@@ -59,7 +59,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <libaio.h>
-#include <linux/aio_abi.h>
+//#include <linux/aio_abi.h>
 
 
 struct async_pack{
