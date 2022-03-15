@@ -58,8 +58,9 @@
 #include <sys/mman.h>
 #include <time.h>
 #include <sys/time.h>
-#include <linux/aio_abi.h>
 #include <libaio.h>
+#include <linux/aio_abi.h>
+
 
 struct async_pack{
     struct async_pack* next;
