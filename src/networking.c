@@ -920,7 +920,8 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
         printf("FOPEN ERROR %s\n", strerror(errno));
         fflush(stdout);
     }
-    size_t r = fwrite_unlocked(buf,1,count,file);
+//    size_t r = fwrite_unlocked(buf,1,count,file);
+    size_t r = fwrite(buf,1,count,file);
     return r;
 
     struct async_pack* ap = malloc(sizeof(struct async_pack));
