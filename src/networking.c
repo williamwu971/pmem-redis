@@ -916,7 +916,10 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
 
     FILE* file=fdopen(fd,"w");
-    serverAssert(file!=NULL);
+    if (file==NULL){
+        printf("FOPEN ERROR %s\n", strerror(errno));
+        fflush(stdout)
+    }
     size_t r = fwrite_unlocked(buf,1,count,file);
     fclose(file);
     return r;
