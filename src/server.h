@@ -58,6 +58,21 @@
 #include <sys/mman.h>
 #include <time.h>
 #include <sys/time.h>
+#include <linux/aio_abi.h>
+#include <libaio.h>
+
+struct async_pack{
+    struct async_pack* next;
+
+    struct aiocb task;
+
+    struct iocb **cb;
+    int nr;
+
+};
+
+#define likely(x)       __builtin_expect((x),1)
+#define unlikely(x)     __builtin_expect((x),0)
 
 
 #define declare_timer u_int64_t elapsed; \
@@ -2155,13 +2170,6 @@ void xorDigest(unsigned char *digest, void *ptr, size_t len);
     printf("DEBUG %s:%d > " fmt "\n", __FILE__, __LINE__, __VA_ARGS__)
 #define redisDebugMark() \
     printf("-- MARK %s:%d --\n", __FILE__, __LINE__)
-
-
-struct async_pack{
-    struct aiocb task;
-    struct async_pack* next;
-};
-
 
 
 #endif

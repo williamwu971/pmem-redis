@@ -892,6 +892,9 @@ int write_times=0; // william
 #define BENCH_TIMES 500000
 declare_timer
 
+
+int ctx_inited=0;
+
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
     if (write_times++==0){
@@ -928,12 +931,27 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     memset(ap,0,sizeof(struct async_pack));
     serverAssert(ap!=NULL);
 
-    ap->task.aio_fildes=fd;
-    ap->task.aio_buf= malloc(count);
-    memcpy(ap->task.aio_buf,buf,count); // possibly costly
-    ap->task.aio_nbytes=count;
-    ap->task.aio_offset= 0; // potential bug
-    int re = aio_write(&(ap->task));
+    extern aio_context_t ctx;
+
+    if (unlikely(!ctx_inited)){
+        io_setup(128, &ctx);
+    }
+    ap->cb=malloc(sizeof(struct iocb*));
+    ap->cb[0]=malloc(sizeof(struct iocb));
+    ap->cb[0][0] = (struct iocb){.aio_fildes = fd,
+            .aio_lio_opcode = IOCB_CMD_PWRITE,
+            .aio_buf = (uint64_t)buf,
+            .aio_nbytes = count};
+//    struct iocb *list_of_iocb[1] = {&cb};
+
+    int re = io_submit(ctx, 1, ap->cb);
+
+//    ap->task.aio_fildes=fd;
+//    ap->task.aio_buf= malloc(count);
+//    memcpy(ap->task.aio_buf,buf,count); // possibly costly
+//    ap->task.aio_nbytes=count;
+//    ap->task.aio_offset= 0; // potential bug
+//    int re = aio_write(&(ap->task));
 
     extern struct async_pack* async_io_queue;
 
@@ -947,8 +965,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     if (!re) {
         return count;
     }else{
-        printf("queue error! %lld %d %zu errno:%s\n",
-               ap->task.aio_offset,ap->task.aio_reqprio,ap->task.aio_nbytes, strerror(errno));
+        printf("queue error! errno:%s\n",strerror(errno));
         fflush(stdout);
         return 0;
     }

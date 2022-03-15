@@ -316,6 +316,7 @@ struct redisCommand redisCommandTable[] = {
 };
 
 struct async_pack* async_io_queue=NULL;//william
+aio_context_t ctx = 0;
 
 /*============================ Utility functions ============================ */
 
@@ -3700,26 +3701,30 @@ static void sigShutdownHandler(int sig) {
 
     while (async_io_queue != NULL){
 
-        int res = aio_error(&(async_io_queue->task));
-        struct async_pack* tmp;
+        struct io_event event;
+        int res = io_getevents(ctx, 1, 1, &event, NULL);
+        async_io_queue_len++;
 
-        switch (res) {
-            case EINPROGRESS:
-                sleep(1);
-                break;
-            case ECANCELED:
-                printf("\nECANCELED detected!\n");
-            case 0:
-                tmp=async_io_queue->next;
-                free(async_io_queue);
-                async_io_queue=tmp;
-                async_io_queue_len++;
-                break;
-            default:
-                printf("\nERROR waiting\n");
-                break;
-
-        }
+//        int res = aio_error(&(async_io_queue->task));
+//        struct async_pack* tmp;
+//
+//        switch (res) {
+//            case EINPROGRESS:
+//                sleep(1);
+//                break;
+//            case ECANCELED:
+//                printf("\nECANCELED detected!\n");
+//            case 0:
+//                tmp=async_io_queue->next;
+//                free(async_io_queue);
+//                async_io_queue=tmp;
+//                async_io_queue_len++;
+//                break;
+//            default:
+//                printf("\nERROR waiting\n");
+//                break;
+//
+//        }
     }
     printf("\nasync_io_queue:%d complete!\n",async_io_queue_len);
     fflush(stdout);
