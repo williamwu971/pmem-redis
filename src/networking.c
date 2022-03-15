@@ -963,6 +963,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
         return count;
     }else{
         printf("queue error! fd:%d str:%s %s\n",fd,buf,strerror(errno));
+        exit(1);
         return 0;
     }
 
