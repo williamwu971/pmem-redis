@@ -3909,19 +3909,6 @@ int redisIsSupervised(int mode) {
     return 0;
 }
 
-#define declare_timer u_int64_t elapsed; \
-   struct timeval st, et;
-
-#define start_timer do { \
-    gettimeofday(&st,NULL); \
-} while(0);
-
-
-#define stop_timer do { \
-   gettimeofday(&et,NULL); \
-   elapsed = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec) + 1; \
-} while(0);
-
 
 
 int main(int argc, char **argv) {

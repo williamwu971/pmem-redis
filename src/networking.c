@@ -888,8 +888,19 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
-//int write_times=0; // william
+int write_times=0; // william
+#define BENCH_TIMES 500000
+declare_timer
+
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
+
+    if (write_times++==0){
+        start_timer
+    }else if (write_times>=BENCH_TIMES){
+        stop_timer
+        double bw = (double) BENCH_TIMES * 1000000. / (double) elapsed;
+        printf("bw %f op/s elapsed %fs\n", bw, (double) elapsed / (double) 1000000);
+    }
 
 //    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
 //    return write(fd,buf,count);
