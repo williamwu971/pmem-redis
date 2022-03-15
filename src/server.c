@@ -316,7 +316,7 @@ struct redisCommand redisCommandTable[] = {
 };
 
 struct async_pack* async_io_queue=NULL;//william
-io_context_t ctx = 0;
+aio_context_t ctx = 0;
 
 /*============================ Utility functions ============================ */
 
