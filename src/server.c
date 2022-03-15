@@ -318,6 +318,7 @@ struct redisCommand redisCommandTable[] = {
 struct async_pack* async_io_queue=NULL;//william
 aio_context_t ctx = 0;
 
+
 /*============================ Utility functions ============================ */
 
 /* Low level logging. To use only for very big messages, otherwise
@@ -4107,6 +4108,8 @@ int main(int argc, char **argv) {
     if (server.maxmemory > 0 && server.maxmemory < 1024*1024) {
         serverLog(LL_WARNING,"WARNING: You specified a maxmemory value that is less than 1MB (current value is %llu bytes). Are you sure this is what you really want?", server.maxmemory);
     }
+
+    io_setup(128, &ctx); // william
 
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);

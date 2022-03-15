@@ -892,9 +892,6 @@ int write_times=0; // william
 #define BENCH_TIMES 500000
 declare_timer
 
-
-int ctx_inited=0;
-
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
     if (write_times++==0){
@@ -934,9 +931,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     extern aio_context_t ctx;
 //    struct iocb ii;
 
-    if (unlikely(!ctx_inited)){
-        io_setup(128, &ctx);
-    }
+
     ap->cb=malloc(sizeof(struct iocb*));
     ap->cb[0]=malloc(sizeof(struct iocb));
 //    io_prep_pwrite(ap->cb[0],fd,buf,count,offset);
