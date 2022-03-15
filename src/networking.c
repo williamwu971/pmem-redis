@@ -932,7 +932,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
     serverAssert(ap!=NULL);
 
     extern io_context_t ctx;
-    struct iocb ii;
+//    struct iocb ii;
 
     if (unlikely(!ctx_inited)){
         io_setup(128, &ctx);
