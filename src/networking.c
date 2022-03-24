@@ -995,7 +995,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     ++io_uring_batch_count;
 
     if (io_uring_batch_count==WRITE_BATCH_SIZE) {
-        io_uring_submit(ring);
+        assert(io_uring_submit(ring)==WRITE_BATCH_SIZE);
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
         for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
