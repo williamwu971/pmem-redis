@@ -992,14 +992,14 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     static int io_uring_batch_count = 0;
     ++io_uring_batch_count;
 
-    if (io_uring_batch_count%WRITE_BATCH_SIZE==0 && io_uring_batch_count!=0) {
+    if (io_uring_batch_count==WRITE_BATCH_SIZE) {
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
         for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
             io_uring_cqe_seen(ring, cqes[j]);
         }
-//        io_uring_batch_count=0;
-        printf("wait %d\n",io_uring_batch_count);
+        io_uring_batch_count=0;
+//        printf("wait %d\n",io_uring_batch_count);
     }
     return (ssize_t)count;
 }
