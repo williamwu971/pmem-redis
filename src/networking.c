@@ -751,7 +751,7 @@ void unlinkClient(client *c) {
         /* Unregister async I/O handlers and close the socket. */
         aeDeleteFileEvent(server.el,c->fd,AE_READABLE);
         aeDeleteFileEvent(server.el,c->fd,AE_WRITABLE);
-        close(c->fd);
+//        close(c->fd); // william
         c->fd = -1;
     }
 
