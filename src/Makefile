@@ -159,7 +159,7 @@ ifeq ($(FAST_SDSFREE), yes)
 endif
 
 REDIS_CC=$(QUIET_CC)$(CC) $(FINAL_CFLAGS)
-REDIS_LD=$(QUIET_LINK)$(CC) $(FINAL_LDFLAGS)
+REDIS_LD=$(QUIET_LINK)$(CC) $(FINAL_LDFLAGS) -I./liburing/src/include/ -L./liburing/src/
 REDIS_INSTALL=$(QUIET_INSTALL)$(INSTALL)
 
 CCCOLOR="\033[34m"
@@ -241,7 +241,7 @@ endif
 
 # redis-server
 $(REDIS_SERVER_NAME): $(REDIS_SERVER_OBJ)
-	$(REDIS_LD) -o $@ $^ ../deps/hiredis/libhiredis.a ../deps/lua/src/liblua.a -I./liburing/src/include/ -L./liburing/src/ $(FINAL_LIBS)
+	$(REDIS_LD) -o $@ $^ ../deps/hiredis/libhiredis.a ../deps/lua/src/liblua.a $(FINAL_LIBS)
 
 # redis-sentinel
 $(REDIS_SENTINEL_NAME): $(REDIS_SERVER_NAME)
