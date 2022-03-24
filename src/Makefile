@@ -21,7 +21,7 @@ NODEPS:=clean distclean
 
 # Default settings
 STD=-std=gnu99 -pedantic -DREDIS_STATIC=''
-WARN=-Wall -W -Wno-missing-field-initializers -Wno-implicit-fallthrough -Wno-expansion-to-defined -Wno-maybe-uninitialized
+WARN=-Wall -W -Wno-missing-field-initializers -Wno-implicit-fallthrough -Wno-expansion-to-defined -Wno-maybe-uninitialized -Wno-unused-function
 OPT=$(OPTIMIZATION)
 
 PREFIX?=/usr/local
