@@ -999,6 +999,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
             io_uring_cqe_seen(ring, cqes[j]);
         }
         io_uring_batch_count=0;
+        printf("wait complete\n");
     }
 }
 
