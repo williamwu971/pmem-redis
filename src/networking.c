@@ -965,9 +965,9 @@ ssize_t write_by_io(int fd,  void *buf, size_t count){
     static io_context_t* ctx=NULL;
     static struct iocb *iocbs[WRITE_BATCH_SIZE];
     static int io_batch_count=0;
-    struct io_event ie[WRITE_BATCH_SIZE];
 
-    if (ctx==NULL){
+
+    if (unlikely(ctx==NULL)){
         ctx= sds_malloc(sizeof(io_context_t));
         memset(ctx,0,sizeof(io_context_t));
         assert(io_setup(WRITE_BATCH_SIZE, ctx)==0);
@@ -981,6 +981,7 @@ ssize_t write_by_io(int fd,  void *buf, size_t count){
 
     if (++io_batch_count==WRITE_BATCH_SIZE){
 
+        struct io_event ie[WRITE_BATCH_SIZE];
         assert(io_submit(ctx[0], WRITE_BATCH_SIZE, iocbs)== WRITE_BATCH_SIZE);  // todo: overhead
         assert(io_getevents(ctx[0], WRITE_BATCH_SIZE, WRITE_BATCH_SIZE, ie, NULL)
         == WRITE_BATCH_SIZE);
@@ -1001,7 +1002,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     static int io_uring_batch_count = 0;
 
 
-    if (ring==NULL){
+    if (unlikely(ring==NULL)){
         ring= sds_malloc(sizeof(struct io_uring));
         assert(io_uring_queue_init(WRITE_BATCH_SIZE, ring, 0) == 0);
     }
