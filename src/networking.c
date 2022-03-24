@@ -983,6 +983,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     }
 
     printf("calling %s\n",__FUNCTION__ );
+    fflush(stdout);
 
     struct iovec *curr = sds_malloc(sizeof(struct iovec));
     curr->iov_base = buf;
