@@ -970,13 +970,14 @@ ssize_t write_by_io(int fd,  void *buf, size_t count){
     }
 
     static int io_batch_count=0;
-    static struct iocb iocbs[WRITE_BATCH_SIZE];
-    io_prep_pwrite(iocbs+io_batch_count, fd, buf, count, 0);
+
+    static struct iocb *iocbs[WRITE_BATCH_SIZE];
+    iocbs[io_batch_count]= sds_malloc(sizeof(struct iocb));
+    io_prep_pwrite(iocbs[io_batch_count], fd, buf, count, 0);
 
     if (++io_batch_count==WRITE_BATCH_SIZE){
 
-        assert(io_submit(ctx[0], WRITE_BATCH_SIZE, (struct iocb **) &iocbs)
-                == WRITE_BATCH_SIZE);  // todo: overhead
+        assert(io_submit(ctx[0], WRITE_BATCH_SIZE, iocbs)== WRITE_BATCH_SIZE);  // todo: overhead
 
         struct io_event ie[WRITE_BATCH_SIZE];
         assert(io_getevents(ctx[0], WRITE_BATCH_SIZE, WRITE_BATCH_SIZE, ie, NULL)
