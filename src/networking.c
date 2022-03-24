@@ -995,6 +995,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     ++io_uring_batch_count;
 
     if (io_uring_batch_count==WRITE_BATCH_SIZE) {
+        printf("submit and wait %d\n",io_uring_batch_count);
         assert(io_uring_submit(ring)==WRITE_BATCH_SIZE);
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
@@ -1002,7 +1003,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
             io_uring_cqe_seen(ring, cqes[j]);
         }
         io_uring_batch_count=0;
-        printf("wait %d\n",io_uring_batch_count);
+        printf("wait %d complete\n",io_uring_batch_count);
     }
     return (ssize_t)count;
 }
