@@ -3697,13 +3697,13 @@ static void sigShutdownHandler(int sig) {
  * william: wait for async IO to complete
  */
 
-    int async_io_queue_len=0;
-
-    while (async_io_queue != NULL){
-
-        struct io_event event;
-        int res = io_getevents(ctx, 1, 1, &event, NULL);
-        async_io_queue_len++;
+//    int async_io_queue_len=0;
+//
+//    while (async_io_queue != NULL){
+//
+//        struct io_event event;
+//        int res = io_getevents(ctx, 1, 1, &event, NULL);
+//        async_io_queue_len++;
 
 //        int res = aio_error(&(async_io_queue->task));
 //        struct async_pack* tmp;
@@ -3725,9 +3725,9 @@ static void sigShutdownHandler(int sig) {
 //                break;
 //
 //        }
-    }
-    printf("\nasync_io_queue:%d complete!\n",async_io_queue_len);
-    fflush(stdout);
+//    }
+//    printf("\nasync_io_queue:%d complete!\n",async_io_queue_len);
+//    fflush(stdout);
 
     serverLogFromHandler(LL_WARNING, msg);
     server.shutdown_asap = 1;
@@ -4108,7 +4108,7 @@ int main(int argc, char **argv) {
         serverLog(LL_WARNING,"WARNING: You specified a maxmemory value that is less than 1MB (current value is %llu bytes). Are you sure this is what you really want?", server.maxmemory);
     }
 
-    io_setup(500000, &ctx); // william
+//    io_setup(500000, &ctx); // william
 
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);
