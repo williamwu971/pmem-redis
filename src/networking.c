@@ -888,7 +888,8 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
-#define WRITE_BATCH_SIZE 10
+#define WRITE_BATCH_SIZE 100
+#define FAST_WRITE write_by_io_uring
 
 int write_times=0; // william
 #define BENCH_TIMES 500000
@@ -1006,7 +1007,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     return (ssize_t)count;
 }
 
-#define FAST_WRITE write_by_io_uring
+
 
 /* Write data in output buffers to client. Return C_OK if the client
  * is still valid after the call, C_ERR if it was freed. */
