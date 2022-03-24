@@ -980,6 +980,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     if (ring==NULL){
         ring= sds_malloc(sizeof(struct io_uring));
         assert(io_uring_queue_init(WRITE_BATCH_SIZE, ring, 0) == 0);
+        printf("io_uring init complete!\n");
     }
 
     printf("calling %s\n",__FUNCTION__ );
@@ -992,6 +993,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     static int io_uring_batch_count = 0;
 
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+    assert(sqe!=NULL);
     io_uring_prep_writev(sqe, fd, curr, 1, 0);
 
 
