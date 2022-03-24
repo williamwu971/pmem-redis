@@ -888,7 +888,7 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
-#define WRITE_BATCH_SIZE 10
+#define WRITE_BATCH_SIZE 20
 #define FAST_WRITE write_by_io
 
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
