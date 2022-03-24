@@ -985,14 +985,16 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     curr->iov_base = buf;
     curr->iov_len = count;
 
+    static int io_uring_batch_count = 0;
+
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
     io_uring_prep_writev(sqe, fd, curr, 1, 0);
-    io_uring_submit(ring);
 
-    static int io_uring_batch_count = 0;
+
     ++io_uring_batch_count;
 
     if (io_uring_batch_count==WRITE_BATCH_SIZE) {
+        io_uring_submit(ring);
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
         for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
