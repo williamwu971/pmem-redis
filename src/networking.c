@@ -888,8 +888,8 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
-#define WRITE_BATCH_SIZE 20
-#define FAST_WRITE write_by_io_uring
+#define WRITE_BATCH_SIZE 10
+#define FAST_WRITE write_by_write
 
 int write_times=0; // william
 #define BENCH_TIMES 500000
@@ -904,9 +904,6 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
         double bw = (double) BENCH_TIMES * 1000000. / (double) elapsed;
         printf("bw %f op/s elapsed %fs\n", bw, (double) elapsed / (double) 1000000);
     }
-
-//    printf("write at loc:%lld err:%s\n", lseek(fd,0,SEEK_CUR),strerror(errno));
-//    return write(fd,buf,count);
 
 //    void* map = mmap(NULL,count,PROT_READ|PROT_WRITE,MAP_SHARED,fd,offset);
 //    if (map==MAP_FAILED){
@@ -972,6 +969,10 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
 
 
+}
+
+ssize_t write_by_write(int fd,  void *buf, size_t count){
+    return write(fd,buf,count);
 }
 
 ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
