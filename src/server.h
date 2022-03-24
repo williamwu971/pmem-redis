@@ -61,6 +61,9 @@
 //#include <libaio.h>
 #include <linux/aio_abi.h>
 #include <syscall.h>
+#include <assert.h>
+#include <sys/uio.h>
+#include <liburing.h>
 
 static int io_setup(unsigned nr, aio_context_t *ctxp){return syscall(__NR_io_setup, nr, ctxp);}
 static int io_destroy(aio_context_t ctx){return syscall(__NR_io_destroy, ctx);}

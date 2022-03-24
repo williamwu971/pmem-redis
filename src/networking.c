@@ -888,6 +888,8 @@ void freeClientsInAsyncFreeQueue(void) {
     }
 }
 
+#define WRITE_BATCH_SIZE 10
+
 int write_times=0; // william
 #define BENCH_TIMES 500000
 declare_timer
@@ -924,24 +926,24 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //    size_t r = fwrite(buf,1,count,file);
 //    return r;
 
-    struct async_pack* ap = malloc(sizeof(struct async_pack));
-    memset(ap,0,sizeof(struct async_pack));
-    serverAssert(ap!=NULL);
-
-    extern aio_context_t ctx;
+//    struct async_pack* ap = malloc(sizeof(struct async_pack));
+//    memset(ap,0,sizeof(struct async_pack));
+//    serverAssert(ap!=NULL);
+//
+//    extern aio_context_t ctx;
 //    struct iocb ii;
 
 
-    ap->cb=malloc(sizeof(struct iocb*));
-    ap->cb[0]=malloc(sizeof(struct iocb));
+//    ap->cb=malloc(sizeof(struct iocb*));
+//    ap->cb[0]=malloc(sizeof(struct iocb));
 //    io_prep_pwrite(ap->cb[0],fd,buf,count,offset);
-    ap->cb[0][0] = (struct iocb){.aio_fildes = fd,
-            .aio_lio_opcode = IOCB_CMD_PWRITE,
-            .aio_buf = (uint64_t)buf,
-            .aio_nbytes = count};
+//    ap->cb[0][0] = (struct iocb){.aio_fildes = fd,
+//            .aio_lio_opcode = IOCB_CMD_PWRITE,
+//            .aio_buf = (uint64_t)buf,
+//            .aio_nbytes = count};
 //    struct iocb *list_of_iocb[1] = {&cb};
 
-    int re = io_submit(ctx, 1, ap->cb);
+//    int re = io_submit(ctx, 1, ap->cb);
 
 //    ap->task.aio_fildes=fd;
 //    ap->task.aio_buf= malloc(count);
@@ -950,24 +952,56 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //    ap->task.aio_offset= 0; // potential bug
 //    int re = aio_write(&(ap->task));
 
-    extern struct async_pack* async_io_queue;
+//    extern struct async_pack* async_io_queue;
+//
+//    if (async_io_queue == NULL){
+//        async_io_queue=ap;
+//    }else{
+//        ap->next=async_io_queue;
+//        async_io_queue=ap;
+//    }
+//
+//    if (!re) {
+//        return count;
+//    }else{
+//        printf("queue error! fd:%d str:%s %s\n",fd,buf,strerror(errno));
+//        exit(1);
+//        return 0;
+//    }
 
-    if (async_io_queue == NULL){
-        async_io_queue=ap;
-    }else{
-        ap->next=async_io_queue;
-        async_io_queue=ap;
-    }
 
-    if (!re) {
-        return count;
-    }else{
-        printf("queue error! fd:%d str:%s %s\n",fd,buf,strerror(errno));
-        exit(1);
-        return 0;
-    }
 
 }
+
+ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
+
+    static struct io_uring* ring=NULL;
+    if (ring==NULL){
+        ring= sds_malloc(sizeof(struct io_uring));
+        assert(io_uring_queue_init(10000, ring, 0) == 0);
+    }
+
+    struct iovec *curr = sds_malloc(sizeof(struct iovec));
+    curr->iov_base = buf;
+    curr->iov_len = count;
+
+    struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+    io_uring_prep_writev(sqe, fd, curr, 1, 0);
+    io_uring_submit(ring);
+
+    static int io_uring_batch_count = 0;
+    ++io_uring_batch_count;
+
+    if (io_uring_batch_count==WRITE_BATCH_SIZE) {
+        struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
+        io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
+        for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
+            io_uring_cqe_seen(ring, cqes[j]);
+        }
+    }
+}
+
+#define FAST_WRITE write_by_io_uring
 
 /* Write data in output buffers to client. Return C_OK if the client
  * is still valid after the call, C_ERR if it was freed. */
@@ -980,7 +1014,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
         if (c->bufpos > 0) {
 //            nwritten = write(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
 
-            nwritten = async_write(fd,c->sentlen,c->buf+c->sentlen,c->bufpos-c->sentlen);
+            nwritten = FAST_WRITE(fd,c->buf+c->sentlen,c->bufpos-c->sentlen);
             /**
              * william
              */
@@ -1008,7 +1042,7 @@ int writeToClient(int fd, client *c, int handler_installed) {
 
 //            nwritten = write(fd, o + c->sentlen, objlen - c->sentlen);
 
-            nwritten = async_write(fd, c->sentlen,o + c->sentlen, objlen - c->sentlen);
+            nwritten = FAST_WRITE(fd,o + c->sentlen, objlen - c->sentlen);
             /**
              * william
              */
