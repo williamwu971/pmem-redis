@@ -978,7 +978,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     static struct io_uring* ring=NULL;
     if (ring==NULL){
         ring= sds_malloc(sizeof(struct io_uring));
-        assert(io_uring_queue_init(10000, ring, 0) == 0);
+        assert(io_uring_queue_init(16, ring, 0) == 0);
     }
 
     struct iovec *curr = sds_malloc(sizeof(struct iovec));
