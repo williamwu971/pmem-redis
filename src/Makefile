@@ -63,9 +63,9 @@ endif
 # Override default settings if possible
 -include .make-settings
 
-FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS)
+FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS) -I./liburing/src/include/ -L./liburing/src/
 FINAL_LDFLAGS=$(LDFLAGS) $(REDIS_LDFLAGS) $(DEBUG)
-FINAL_LIBS=-lm -lrt -laio -I./liburing/src/include/ -L./liburing/src/ -luring
+FINAL_LIBS=-lm -lrt -laio -luring
 DEBUG=-g -ggdb
 
 ifeq ($(uname_S),SunOS)
