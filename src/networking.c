@@ -983,18 +983,24 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
         printf("io_uring init complete!\n");
     }
 
-    printf("calling %s\n",__FUNCTION__ );
+    printf("calling %s b0\n",__FUNCTION__ );
     fflush(stdout);
 
     struct iovec *curr = sds_malloc(sizeof(struct iovec));
     curr->iov_base = buf;
     curr->iov_len = count;
 
+    printf("calling %s b1\n",__FUNCTION__ );
+    fflush(stdout);
+
     static int io_uring_batch_count = 0;
 
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
     assert(sqe!=NULL);
     io_uring_prep_writev(sqe, fd, curr, 1, 0);
+
+    printf("calling %s b2\n",__FUNCTION__ );
+    fflush(stdout);
 
 
     ++io_uring_batch_count;
