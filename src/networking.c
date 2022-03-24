@@ -982,6 +982,8 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
         assert(io_uring_queue_init(WRITE_BATCH_SIZE, ring, 0) == 0);
     }
 
+    printf("calling %s\n",__FUNCTION__ );
+
     struct iovec *curr = sds_malloc(sizeof(struct iovec));
     curr->iov_base = buf;
     curr->iov_len = count;
