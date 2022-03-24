@@ -983,48 +983,37 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     if (ring==NULL){
         ring= sds_malloc(sizeof(struct io_uring));
         assert(io_uring_queue_init(WRITE_BATCH_SIZE, ring, 0) == 0);
-//        printf("io_uring init complete!\n");
     }
-
-//    printf("calling %s %d b0\n",__FUNCTION__ ,io_uring_batch_count);
-//    fflush(stdout);
 
     struct iovec *curr = sds_malloc(sizeof(struct iovec));
     curr->iov_base = buf;
     curr->iov_len = count;
 
-//    printf("calling %s %d b1\n",__FUNCTION__ ,io_uring_batch_count);
-//    fflush(stdout);
-
-
 
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
     assert(sqe!=NULL);
     io_uring_prep_writev(sqe, fd, curr, 1, 0);
-    io_uring_sqe_set_data(sqe,(void*)fd);
-
-//    printf("calling %s %d b2\n",__FUNCTION__ ,io_uring_batch_count);
-//    fflush(stdout);
+//    io_uring_sqe_set_data(sqe,(void*)fd);
 
 
     ++io_uring_batch_count;
 
     if (io_uring_batch_count==WRITE_BATCH_SIZE) {
-//        printf("submit and wait %d\n",io_uring_batch_count);
-//        fflush(stdout);
+
         assert(io_uring_submit(ring)==WRITE_BATCH_SIZE);
+
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
         for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
-            close((int)io_uring_cqe_get_data(cqes[j]));
+//            close((int)io_uring_cqe_get_data(cqes[j]));
             io_uring_cqe_seen(ring, cqes[j]);
 
         }
+
         io_uring_batch_count=0;
-//        printf("wait %d complete\n",io_uring_batch_count);
-//        fflush(stdout);
+
     }
-//    printf("calling %s %d b3\n",__FUNCTION__ ,io_uring_batch_count);
+
     return (ssize_t)count;
 }
 
