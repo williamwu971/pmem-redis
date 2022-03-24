@@ -1001,6 +1001,7 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
     assert(sqe!=NULL);
     io_uring_prep_writev(sqe, fd, curr, 1, 0);
+    io_uring_sqe_set_data(sqe,(void*)fd);
 
 //    printf("calling %s %d b2\n",__FUNCTION__ ,io_uring_batch_count);
 //    fflush(stdout);
@@ -1015,7 +1016,9 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
         struct io_uring_cqe *cqes[WRITE_BATCH_SIZE];
         io_uring_wait_cqe_nr(ring, cqes, WRITE_BATCH_SIZE);
         for (int j = 0; j < WRITE_BATCH_SIZE; j++) {
+            close((int)io_uring_cqe_get_data(cqes[j]));
             io_uring_cqe_seen(ring, cqes[j]);
+
         }
         io_uring_batch_count=0;
 //        printf("wait %d complete\n",io_uring_batch_count);
