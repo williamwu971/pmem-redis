@@ -889,21 +889,10 @@ void freeClientsInAsyncFreeQueue(void) {
 }
 
 #define WRITE_BATCH_SIZE 10
-#define FAST_WRITE write_by_write
-
-int write_times=0; // william
-#define BENCH_TIMES 500000
-declare_timer
+#define FAST_WRITE write_by_io
 
 ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
-    if (write_times++==0){
-        start_timer
-    }else if (write_times>=BENCH_TIMES){
-        stop_timer
-        double bw = (double) BENCH_TIMES * 1000000. / (double) elapsed;
-        printf("bw %f op/s elapsed %fs\n", bw, (double) elapsed / (double) 1000000);
-    }
 
 //    void* map = mmap(NULL,count,PROT_READ|PROT_WRITE,MAP_SHARED,fd,offset);
 //    if (map==MAP_FAILED){
@@ -928,10 +917,10 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //    memset(ap,0,sizeof(struct async_pack));
 //    serverAssert(ap!=NULL);
 //
-//    extern aio_context_t ctx;
+//
 //    struct iocb ii;
-
-
+//
+//
 //    ap->cb=malloc(sizeof(struct iocb*));
 //    ap->cb[0]=malloc(sizeof(struct iocb));
 //    io_prep_pwrite(ap->cb[0],fd,buf,count,offset);
@@ -940,7 +929,7 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 //            .aio_buf = (uint64_t)buf,
 //            .aio_nbytes = count};
 //    struct iocb *list_of_iocb[1] = {&cb};
-
+//
 //    int re = io_submit(ctx, 1, ap->cb);
 
 //    ap->task.aio_fildes=fd;
@@ -969,6 +958,34 @@ ssize_t async_write(int fd, off_t offset,const void *buf, size_t count){
 
 
 
+}
+
+ssize_t write_by_io(int fd,  void *buf, size_t count){
+
+    static io_context_t* ctx=NULL;
+    if (ctx==NULL){
+        ctx= sds_malloc(sizeof(io_context_t));
+        memset(ctx,0,sizeof(io_context_t));
+        assert(io_setup(WRITE_BATCH_SIZE, ctx)==0);
+    }
+
+    static int io_batch_count=0;
+    static struct iocb iocbs[WRITE_BATCH_SIZE];
+    io_prep_pwrite(iocbs+io_batch_count, fd, buf, count, 0);
+
+    if (++io_batch_count==WRITE_BATCH_SIZE){
+
+        assert(io_submit(ctx[0], WRITE_BATCH_SIZE, (struct iocb **) &iocbs)
+                == WRITE_BATCH_SIZE);  // todo: overhead
+
+        struct io_event ie[WRITE_BATCH_SIZE];
+        assert(io_getevents(ctx[0], WRITE_BATCH_SIZE, WRITE_BATCH_SIZE, ie, NULL)
+        == WRITE_BATCH_SIZE);
+
+        io_batch_count=0;
+    }
+
+    return (ssize_t)count;
 }
 
 ssize_t write_by_write(int fd,  void *buf, size_t count){
