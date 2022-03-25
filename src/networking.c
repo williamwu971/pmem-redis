@@ -1000,14 +1000,15 @@ ssize_t write_by_io_uring(int fd,  void *buf, size_t count){
 
     static struct io_uring* ring=NULL;
     static int io_uring_batch_count = 0;
-
+    static struct iovec* iovecs;
 
     if (unlikely(ring==NULL)){
         ring= sds_malloc(sizeof(struct io_uring));
         assert(io_uring_queue_init(WRITE_BATCH_SIZE, ring, 0) == 0);
+        iovecs = sds_malloc(sizeof(struct iovec)*WRITE_BATCH_SIZE);
     }
 
-    struct iovec *curr = sds_malloc(sizeof(struct iovec));
+    struct iovec *curr = iovecs+io_uring_batch_count;
     curr->iov_base = buf;
     curr->iov_len = count;
 
