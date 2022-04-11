@@ -1769,6 +1769,9 @@ int listenToPort(int port, int *fds, int *count) {
      * entering the loop if j == 0. */
     if (server.bindaddr_count == 0) server.bindaddr[0] = NULL;
     for (j = 0; j < server.bindaddr_count || j == 0; j++) {
+
+        printf("WILLIAM ltp: %d %s\n",port,server.bindaddr[j]);
+
         if (server.bindaddr[j] == NULL) {
             int unsupported = 0;
             /* Bind * for both IPv6 and IPv4, we enter here only if
@@ -4113,6 +4116,15 @@ int main(int argc, char **argv) {
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);
     aeMain(server.el);
+
+    /**
+     * network test
+     */
+
+
+
+
+
 //    printf("\ncheck\n\n");
     /**
      * william
