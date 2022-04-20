@@ -4145,7 +4145,7 @@ int main(int argc, char **argv) {
 
 
     client * c=createClient(-1);
-    int iter = 10000000;
+    int iter = 1000000;
 
 //    char perf_buf[256];
 //    sprintf(perf_buf,"/home/blepers/linux/tools/perf/perf record --call-graph dwarf -a -g -p -o /home/xiaoxiang/redis-bench/perf.data %d >/dev/null 2>&1 &",getpid());
