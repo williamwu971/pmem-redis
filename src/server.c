@@ -4134,7 +4134,7 @@ int main(int argc, char **argv) {
      */
 
 
-    FILE* standard_file = fopen("/home/xiaoxiang/pmem-redis-test","r");
+    FILE* standard_file = fopen("/home/xiaoxiang/pmem-redis-test/standard.txt","r");
     assert(standard_file!=NULL);
 
     char standard_command[PROTO_IOBUF_LEN];

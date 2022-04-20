@@ -1589,8 +1589,17 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
      * william
      * taking a look at querybuf
      */
-     printf("querybuf \n\nSTART: %s END:\n\n",c->querybuf);
-     printf("INFO nread:%d peak:%zu readlen:%d qblen:%zu master:%d\n",nread,c->querybuf_peak,readlen,qblen,c->flags & CLIENT_MASTER);
+     static int outputted_standard=0;
+     if (!outputted_standard){
+//         printf("querybuf \n\nSTART: %s END:\n\n",c->querybuf);
+//         printf("INFO nread:%d peak:%zu readlen:%d qblen:%zu master:%d\n",nread,c->querybuf_peak,readlen,qblen,c->flags & CLIENT_MASTER);
+
+        FILE* file = fopen("/home/xiaoxiang/pmem-redis-test/standard.txt","w");
+         fwrite(c->querybuf,1,nread,file);
+         fclose(file);
+         outputted_standard=1;
+     }
+
 
     /* Time to process the buffer. If the client is a master we need to
      * compute the difference between the applied offset before and after
