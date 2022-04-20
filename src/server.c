@@ -4132,7 +4132,7 @@ int main(int argc, char **argv) {
      * process command test
      * create a list of clients and call process command directly
      */
-
+    printf("starting benchmark!\n");
 
     FILE* standard_file = fopen("/home/xiaoxiang/pmem-redis-test/standard.txt","r");
     assert(standard_file!=NULL);
