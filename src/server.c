@@ -4152,11 +4152,13 @@ int main(int argc, char **argv) {
         memcpy(c->querybuf,standard_command,PROTO_IOBUF_LEN);
         sdsIncrLen(c->querybuf,nread);
         processInputBuffer(c);
+        printf("processed!\n");
     }
 
 
 
     printf("\ncheck\n\n");
+    fflush(stdout);
     /**
      * william
      * major test
