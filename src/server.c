@@ -4145,19 +4145,25 @@ int main(int argc, char **argv) {
 
 
     client * c=createClient(-1);
-    for (int i=0;i<10;i++){
+    int iter = 10000000;
+
+    declare_timer
+    start_timer
+    for (int i=0;i<iter;i++){
 
         // simulate read
         c->querybuf = sdsMakeRoomFor(c->querybuf, PROTO_IOBUF_LEN);
         memcpy(c->querybuf,standard_command,PROTO_IOBUF_LEN);
         sdsIncrLen(c->querybuf,nread);
         processInputBuffer(c);
-        printf("processed!\n");
+//        printf("processed!\n");
     }
 
 
+    stop_timer
+    double bw = (double) iter * 1000000. / (double) elapsed;
+    printf("bw %f/s elapsed %fs\n",bw,(double)elapsed/(double)1000000);
 
-    printf("\ncheck\n\n");
     fflush(stdout);
     /**
      * william
