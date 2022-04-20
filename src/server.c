@@ -4126,7 +4126,7 @@ int main(int argc, char **argv) {
 
 
     aeMain(server.el);
-    return 1;
+//    return 1;
 
     /**
      * process command test
@@ -4156,7 +4156,7 @@ int main(int argc, char **argv) {
 
 
 
-//    printf("\ncheck\n\n");
+    printf("\ncheck\n\n");
     /**
      * william
      * major test
