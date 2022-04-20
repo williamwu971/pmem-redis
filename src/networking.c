@@ -1590,7 +1590,7 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
      * taking a look at querybuf
      */
      printf("querybuf \n\nSTART: %s END:\n\n",c->querybuf);
-     printf("INFO peak:%zu readlen:%d qblen:%zu master:%d\n",c->querybuf_peak,readlen,qblen,c->flags & CLIENT_MASTER);
+     printf("INFO nread:%d peak:%zu readlen:%d qblen:%zu master:%d\n",nread,c->querybuf_peak,readlen,qblen,c->flags & CLIENT_MASTER);
 
     /* Time to process the buffer. If the client is a master we need to
      * compute the difference between the applied offset before and after

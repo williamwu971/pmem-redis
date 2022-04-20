@@ -4126,17 +4126,33 @@ int main(int argc, char **argv) {
 
 
     aeMain(server.el);
+    return 1;
 
     /**
      * process command test
      * create a list of clients and call process command directly
      */
 
-//    client * clients[NUM_OF_CLIENTS];
-//    for (int i=0;i<NUM_OF_CLIENTS;i++){
-//        clients[i] = createClient(-1);
-//    }
 
+    FILE* standard_file = fopen("/home/xiaoxiang/pmem-redis-test","r");
+    assert(standard_file!=NULL);
+
+    char standard_command[PROTO_IOBUF_LEN];
+    memset(standard_command,0,PROTO_IOBUF_LEN);
+
+    int nread = fread(standard_command,1,PROTO_IOBUF_LEN,standard_file);
+    assert(nread>0);
+
+
+    client * c=createClient(-1);
+    for (int i=0;i<10;i++){
+
+        // simulate read
+        c->querybuf = sdsMakeRoomFor(c->querybuf, PROTO_IOBUF_LEN);
+        memcpy(c->querybuf,standard_command,PROTO_IOBUF_LEN);
+        sdsIncrLen(c->querybuf,nread);
+        processInputBuffer(c);
+    }
 
 
 
