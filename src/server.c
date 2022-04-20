@@ -2468,10 +2468,10 @@ int processCommand(client *c) {
      */
 
 //    printf("%s\n",c->argv[0]->ptr);
-    for (int i=0;i<c->argc;i++){
-        printf("%s ",c->argv[i]->ptr);
-    }
-    printf("\n");
+//    for (int i=0;i<c->argc;i++){
+//        printf("%s ",c->argv[i]->ptr);
+//    }
+//    printf("\n");
 
 
     if (!strcasecmp(c->argv[0]->ptr,"quit")) {
@@ -4120,7 +4120,7 @@ int main(int argc, char **argv) {
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeSetAfterSleepProc(server.el,afterSleep);
 
-//#define NUM_OF_CLIENTS 50
+#define NUM_OF_CLIENTS 50
 //    int fds[NUM_OF_CLIENTS];
 //    for (int i=0;i<)
 
@@ -4128,9 +4128,14 @@ int main(int argc, char **argv) {
     aeMain(server.el);
 
     /**
-     * network test
+     * process command test
+     * create a list of clients and call process command directly
      */
 
+//    client * clients[NUM_OF_CLIENTS];
+//    for (int i=0;i<NUM_OF_CLIENTS;i++){
+//        clients[i] = createClient(-1);
+//    }
 
 
 

@@ -1584,6 +1584,13 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
         return;
     }
 
+
+    /**
+     * william
+     * taking a look at querybuf
+     */
+     printf("querybuf: %s",c->querybuf);
+
     /* Time to process the buffer. If the client is a master we need to
      * compute the difference between the applied offset before and after
      * processing the buffer, to understand how much of the replication stream
