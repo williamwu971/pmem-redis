@@ -4147,6 +4147,10 @@ int main(int argc, char **argv) {
     client * c=createClient(-1);
     int iter = 10000000;
 
+    char perf_buf[256];
+    sprintf(perf_buf,"/home/blepers/linux/tools/perf/perf record --call-graph dwarf -a -g -p -o /home/xiaoxiang/redis-bench/perf.data %d >/dev/null 2>&1 &",getpid());
+    system(perf_buf);
+
     declare_timer
     start_timer
     for (int i=0;i<iter;i++){
@@ -4161,6 +4165,9 @@ int main(int argc, char **argv) {
 
 
     stop_timer
+
+    system("killall -w perf");
+
     double bw = (double) iter * 1000000. / (double) elapsed;
     printf("bw %f/s elapsed %fs\n",bw,(double)elapsed/(double)1000000);
 
