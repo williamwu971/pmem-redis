@@ -4149,6 +4149,7 @@ int main(int argc, char **argv) {
 
     char perf_buf[256];
     sprintf(perf_buf,"/home/blepers/linux/tools/perf/perf record --call-graph dwarf -a -g -p -o /home/xiaoxiang/redis-bench/perf.data %d >/dev/null 2>&1 &",getpid());
+//    sprintf(perf_buf,"perf stat -e unc_m_pmm_bandwidth.read -e unc_m_pmm_bandwidth.write -e unc_m_pmm_bandwidth.total");
     system(perf_buf);
 
     declare_timer
